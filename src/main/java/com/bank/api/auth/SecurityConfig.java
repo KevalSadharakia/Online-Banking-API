@@ -23,7 +23,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/api/auth/login","/api/user/create").permitAll()
+                .requestMatchers("/api/auth/login","/api/user/create","/api/createAccount","/api/enableNetBanking").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
