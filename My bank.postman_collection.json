@@ -1,0 +1,68 @@
+{
+	"info": {
+		"_postman_id": "7d417201-ddae-4eeb-b206-da368c8571c8",
+		"name": "My bank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11206074"
+	},
+	"item": [
+		{
+			"name": "createAccount",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\":\"Neloy\",\n    \"lastName\":\"Rudra\",\n    \"address\":\"Hyd\",\n    \"identityProofNumber\":\"985112341234\",\n    \"contactNumber\":\"9851695321\",\n    \"email\":\"neloy.nr2@gmail.com\",\n    \"gender\":\"Male\",\n    \"fatherName\":\"abc\",\n    \"dob\":\"03/04/2000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/createAccount",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"createAccount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enableNetBanking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \n    \"username\":\"\",\n    \"accountNumber\":\"\",\n    \"accountPassword\":\"\",\n    \"transactionPassword\":\"\",\n    \"phoneNumber\":\"\"\n   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/createAccount",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"createAccount"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
