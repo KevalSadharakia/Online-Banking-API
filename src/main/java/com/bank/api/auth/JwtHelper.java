@@ -1,6 +1,5 @@
 package com.bank.api.auth;
 
-import com.bank.api.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

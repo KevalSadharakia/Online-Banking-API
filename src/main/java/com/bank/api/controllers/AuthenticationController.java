@@ -4,7 +4,7 @@ package com.bank.api.controllers;
 import com.bank.api.auth.JwtHelper;
 import com.bank.api.models.JWTRequest;
 import com.bank.api.models.JWTResponse;
-import com.bank.api.services.UserService;
+import com.bank.api.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +18,11 @@ public class AuthenticationController {
     JwtHelper jwtHelper;
 
     @Autowired
-    UserService userService;
+    AccountService accountService;
     @PostMapping
     public ResponseEntity<Object> login(@RequestBody JWTRequest jwtRequest){
 
-        if(userService.isValidUser(jwtRequest)){
+        if(accountService.isValidAccount(jwtRequest)){
             String token = jwtHelper.generateToken(jwtRequest.getUsername());
             JWTResponse jwtResponse = new JWTResponse(jwtRequest.getUsername(),token);
             return new ResponseEntity<>(jwtResponse, HttpStatus.OK);

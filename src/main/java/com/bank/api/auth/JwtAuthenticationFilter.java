@@ -1,7 +1,7 @@
 package com.bank.api.auth;
 
-import com.bank.api.models.User;
-import com.bank.api.services.UserService;
+import com.bank.api.models.Account;
+import com.bank.api.services.AccountService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtHelper jwtHelper;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
 
     @Override
@@ -62,16 +60,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             }
 
-            User user = userService.getUser(username);
+            Account account = accountService.getAccount(username);
 
-            if (username != null && user!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null && account!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 Boolean validateToken = this.jwtHelper.validateToken(token, username);
 
                 if (validateToken) {
                     logger.info("validated");
 
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, null);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(account, null, null);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 

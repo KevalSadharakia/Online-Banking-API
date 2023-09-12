@@ -1,6 +1,7 @@
 package com.bank.api.services;
 
 import com.bank.api.models.Account;
+import com.bank.api.models.JWTRequest;
 import com.bank.api.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,24 @@ public class AccountService {
 
     public boolean isAccountExist(String username){
         return accountRepository.existsById(username);
+    }
+    public Account getAccount(String username){
+        Optional<Account> accountOptional = accountRepository.findById(username);
+        if(!accountOptional.isPresent()){
+            return null;
+        }
+        return accountOptional.get();
+    }
+
+    public boolean isValidAccount(JWTRequest jwtRequest){
+        Account account = getAccount(jwtRequest.getUsername());
+        if(account==null){
+            return false;
+        }
+        if(account.getAccountPassword().equals(jwtRequest.getPassword())){
+            return true;
+        }
+        return false;
     }
 
     public boolean isNetBankingAlreadyEnabled(int id){
