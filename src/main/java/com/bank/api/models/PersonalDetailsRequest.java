@@ -24,7 +24,7 @@ public class PersonalDetailsRequest {
     @Size(min = 2, max = 50, message = "FatherName must be between 2 and 50 characters")
     String fatherName;
 
-    @Pattern(regexp = "[0-9]{2}[/][0-9]{2}[/][0-9]{4}",message = "Put dob in DD/MM/YYYY format")
+    @Pattern(regexp = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}",message = "Put dob in YYYY-MM-DD format")
     String dob;
 
     @Size(min = 2, max = 50, message = "Address must be between 2 and 50 characters")

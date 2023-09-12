@@ -20,7 +20,7 @@ public class AccountService {
         return accountRepository.existsById(username);
     }
 
-    public Object isNetBankingAlreadyEnabled(int id){
+    public boolean isNetBankingAlreadyEnabled(int id){
         Optional<Account> account = accountRepository.findByAccountNumber(id);
         return account.isPresent();
     }
