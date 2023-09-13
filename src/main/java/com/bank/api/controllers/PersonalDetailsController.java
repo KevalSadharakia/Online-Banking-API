@@ -1,6 +1,7 @@
 package com.bank.api.controllers;
 
-import com.bank.api.models.PersonalDetails;
+import com.bank.api.entity.Account;
+import com.bank.api.entity.PersonalDetails;
 import com.bank.api.models.PersonalDetailsRequest;
 import com.bank.api.services.PersonalDetailsService;
 import jakarta.validation.Valid;
@@ -16,13 +17,13 @@ import java.util.Random;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/createAccount")
+@RequestMapping("/api")
 public class PersonalDetailsController {
     private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
 
     @Autowired
     PersonalDetailsService personalDetailsService;
-    @PostMapping
+    @PostMapping("/createAccount")
     public ResponseEntity<Object> createAccount(@Valid @RequestBody PersonalDetailsRequest personalDetailsRequest){
 
         PersonalDetails personalDetails = new PersonalDetails();
@@ -35,7 +36,6 @@ public class PersonalDetailsController {
         personalDetails.setContactNumber(personalDetailsRequest.getContactNumber());
         personalDetails.setEmail(personalDetailsRequest.getEmail());
         personalDetails.setGender(personalDetailsRequest.getGender());
-
         Random random = new Random();
         int accountNumber = random.nextInt(0,Integer.MAX_VALUE);
         personalDetails.setAccountNumber(accountNumber);
@@ -44,5 +44,7 @@ public class PersonalDetailsController {
 
 
     }
+
+
 
 }

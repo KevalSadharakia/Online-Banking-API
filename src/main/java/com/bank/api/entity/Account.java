@@ -1,8 +1,6 @@
-package com.bank.api.models;
+package com.bank.api.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -15,12 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Account {
 
-    @Column(nullable =false)
-    @Id
-    String username;
+
 
     @Column(nullable =false)
+    @Id
     int accountNumber;
+
+    @Column(nullable =false)
+    String username;
 
     @Column(nullable =false)
     @Size(min = 4, max = 2000, message = "Password length must be greater than 4 characters")
@@ -34,5 +34,7 @@ public class Account {
     @Pattern(regexp = "[9876][0-9]{9}",message = "Phone number is not valid")
     @Size(min = 10, max = 10, message = "Phone Number must be of 10 numbers")
     String phoneNumber;
+
+
 
 }

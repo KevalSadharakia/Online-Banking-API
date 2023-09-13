@@ -27,7 +27,7 @@ public class SecurityConfig {
 
 
         http.csrf(config->config.disable()).authorizeRequests()
-                .requestMatchers("/api/auth/login","/api/user/create","/api/createAccount","/api/enableNetBanking").permitAll()
+                .requestMatchers("/api/auth/login","/api/user/create","/api/createAccount","/api/enableNetBanking","/api/account/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))

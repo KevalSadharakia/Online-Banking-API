@@ -1,7 +1,11 @@
 package com.bank.api.repositories;
 
-import com.bank.api.models.PersonalDetails;
+import com.bank.api.entity.PersonalDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails,Integer> {
+import java.util.Optional;
+
+public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails,String> {
+    Optional<PersonalDetails> findByAccountNumber(int accountNumber);
+    Optional<PersonalDetails> findByEmail(String email);
 }

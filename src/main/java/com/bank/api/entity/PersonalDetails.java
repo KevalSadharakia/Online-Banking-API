@@ -1,8 +1,6 @@
-package com.bank.api.models;
+package com.bank.api.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -12,6 +10,9 @@ import lombok.Data;
 public class PersonalDetails {
 
     @Id
+    @Column(nullable =false)
+    String email;
+
     @Column(nullable = false)
     int accountNumber;
     @Column(nullable =false)
@@ -31,9 +32,13 @@ public class PersonalDetails {
 
     @Column(nullable =false)
     String contactNumber;
-    @Column(nullable =false)
-    String email;
+
+
     @Column(nullable =false)
     private String gender;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account", referencedColumnName = "accountNumber")
+    Account account;
 
 }

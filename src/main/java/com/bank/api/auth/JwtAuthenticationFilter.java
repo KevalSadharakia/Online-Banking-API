@@ -1,6 +1,6 @@
 package com.bank.api.auth;
 
-import com.bank.api.models.Account;
+import com.bank.api.entity.Account;
 import com.bank.api.services.AccountService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             }
 
-            Account account = accountService.getAccount(username);
+            Account account = accountService.getAccountByUsername(username);
 
             if (username != null && account!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
 
