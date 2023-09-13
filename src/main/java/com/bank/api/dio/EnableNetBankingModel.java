@@ -1,33 +1,34 @@
-package com.bank.api.entity;
+package com.bank.api.dio;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Account {
+@AllArgsConstructor
+public class EnableNetBankingModel {
 
-    @Column(nullable =false,unique = true)
-    @Id
     int accountNumber;
 
-    @Column(nullable =false)
     @Size(min = 4, max = 2000, message = "Transaction password length must be greater than 4 characters")
     String transactionPassword;
 
-    @Column(nullable =false,unique = true)
+    @Size(min = 4, max = 2000, message = "Transaction password length must be greater than 4 characters")
+    String accountPassword;
+
+    @Size(min = 4, max = 2000, message = "Username length must be greater than 4 characters")
+    String username;
+
     @Pattern(regexp = "[9876][0-9]{9}",message = "Phone number is not valid")
     @Size(min = 10, max = 10, message = "Phone Number must be of 10 numbers")
     String phoneNumber;
 
-    @Column(nullable = false)
-    long balance;
 
 
 }

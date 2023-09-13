@@ -1,4 +1,4 @@
-package com.bank.api.models;
+package com.bank.api.dio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

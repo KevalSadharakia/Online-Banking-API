@@ -26,8 +26,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 
-        http.csrf(config->config.disable()).authorizeRequests()
-                .requestMatchers("/api/auth/login","/api/user/create","/api/createAccount","/api/enableNetBanking","/api/account/**").permitAll()
+        http.authorizeRequests()
+                .requestMatchers("/api/auth/login","/api/createAccount","/api/enableNetBanking").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))

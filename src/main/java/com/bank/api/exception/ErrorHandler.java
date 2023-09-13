@@ -1,5 +1,6 @@
 package com.bank.api.exception;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -29,4 +30,12 @@ public class ErrorHandler {
         return new ResponseEntity<String>(sb.toString(),HttpStatus.BAD_REQUEST);
 
     }
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<String> handleInvalidMethodArgument(SQLIntegrityConstraintViolationException ex){
+        return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+
+    }
+
+
+
 }

@@ -1,7 +1,9 @@
 package com.bank.api.auth;
 
 import com.bank.api.entity.Account;
+import com.bank.api.entity.PersonalDetails;
 import com.bank.api.services.AccountService;
+import com.bank.api.services.PersonalDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -28,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtHelper jwtHelper;
 
     @Autowired
-    private AccountService accountService;
+    private PersonalDetailsService personalDetailsService;
 
 
     @Override
@@ -60,16 +62,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             }
 
-            Account account = accountService.getAccountByUsername(username);
+            PersonalDetails personalDetails = personalDetailsService.getDetailsByUsername(username);
 
-            if (username != null && account!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null && personalDetails!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 Boolean validateToken = this.jwtHelper.validateToken(token, username);
 
                 if (validateToken) {
                     logger.info("validated");
 
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(account, null, null);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(personalDetails, null, null);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 

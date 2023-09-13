@@ -8,4 +8,9 @@ import java.util.Optional;
 public interface PersonalDetailsRepository extends JpaRepository<PersonalDetails,String> {
     Optional<PersonalDetails> findByAccountNumber(int accountNumber);
     Optional<PersonalDetails> findByEmail(String email);
+    Optional<PersonalDetails> findByContactNumber(String username);
+
+    Optional<PersonalDetails> findByIdentityProofNumber(String username);
+
+    Optional<PersonalDetails> findByUsername(String username);
 }

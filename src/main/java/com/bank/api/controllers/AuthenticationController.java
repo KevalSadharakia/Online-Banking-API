@@ -2,9 +2,10 @@ package com.bank.api.controllers;
 
 
 import com.bank.api.auth.JwtHelper;
-import com.bank.api.models.JWTRequest;
-import com.bank.api.models.JWTResponse;
+import com.bank.api.dio.JWTRequest;
+import com.bank.api.dio.JWTResponse;
 import com.bank.api.services.AccountService;
+import com.bank.api.services.PersonalDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,11 @@ public class AuthenticationController {
     JwtHelper jwtHelper;
 
     @Autowired
-    AccountService accountService;
+    PersonalDetailsService personalDetailsService;
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody JWTRequest jwtRequest){
 
-        if(accountService.isValidAccount(jwtRequest)){
+        if(personalDetailsService.isLoginCredentialValid(jwtRequest)){
             String token = jwtHelper.generateToken(jwtRequest.getUsername());
             JWTResponse jwtResponse = new JWTResponse(jwtRequest.getUsername(),token);
             return new ResponseEntity<>(jwtResponse, HttpStatus.OK);

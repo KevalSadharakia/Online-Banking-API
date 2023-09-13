@@ -1,8 +1,10 @@
 package com.bank.api.controllers;
 
-import com.bank.api.entity.Account;
+import com.bank.api.dio.EnableNetBankingModel;
 import com.bank.api.entity.PersonalDetails;
-import com.bank.api.models.PersonalDetailsRequest;
+import com.bank.api.dio.PersonalDetailsRequest;
+import com.bank.api.helper.ModelConverter;
+import com.bank.api.services.AccountService;
 import com.bank.api.services.PersonalDetailsService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -23,27 +25,42 @@ public class PersonalDetailsController {
 
     @Autowired
     PersonalDetailsService personalDetailsService;
+
+
     @PostMapping("/createAccount")
     public ResponseEntity<Object> createAccount(@Valid @RequestBody PersonalDetailsRequest personalDetailsRequest){
 
-        PersonalDetails personalDetails = new PersonalDetails();
-        personalDetails.setFirstName(personalDetailsRequest.getFirstName());
-        personalDetails.setLastName(personalDetailsRequest.getLastName());
-        personalDetails.setFatherName(personalDetailsRequest.getFatherName());
-        personalDetails.setDob(personalDetailsRequest.getDob());
-        personalDetails.setAddress(personalDetailsRequest.getAddress());
-        personalDetails.setIdentityProofNumber(personalDetailsRequest.getIdentityProofNumber());
-        personalDetails.setContactNumber(personalDetailsRequest.getContactNumber());
-        personalDetails.setEmail(personalDetailsRequest.getEmail());
-        personalDetails.setGender(personalDetailsRequest.getGender());
-        Random random = new Random();
-        int accountNumber = random.nextInt(0,Integer.MAX_VALUE);
-        personalDetails.setAccountNumber(accountNumber);
-
-       return new ResponseEntity<>(personalDetailsService.createAccount(personalDetails), HttpStatus.CREATED) ;
-
+        if(personalDetailsService.isExist(personalDetailsRequest.getEmail())){
+            return new ResponseEntity<>("Email address is used", HttpStatus.BAD_REQUEST) ;
+        }
+        return new ResponseEntity<>(personalDetailsService.save(ModelConverter.getPersonalDetailsFromPersonalDetailsRequest(personalDetailsRequest)), HttpStatus.CREATED) ;
 
     }
+
+
+    @PostMapping("/enableNetBanking")
+    public ResponseEntity<Object> enableNetBanking(@Valid @RequestBody EnableNetBankingModel enableNetBankingModel){
+
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(enableNetBankingModel.getAccountNumber());
+        if(personalDetailsService.isNetBankingAlreadyEnabled(enableNetBankingModel.getAccountNumber())){
+            return new ResponseEntity<>("Account already created",HttpStatus.BAD_REQUEST);
+        }
+
+        if(personalDetails==null){
+            return new ResponseEntity<>("Invalid account number",HttpStatus.BAD_REQUEST);
+        }else {
+            if(!personalDetails.getContactNumber().equals(enableNetBankingModel.getPhoneNumber())){
+                return new ResponseEntity<>("Invalid phone number",HttpStatus.BAD_REQUEST);
+            }
+        }
+        personalDetails.setPassword(enableNetBankingModel.getAccountPassword());
+        personalDetails.setUsername(enableNetBankingModel.getUsername());
+        personalDetails.setAccount(ModelConverter.getAccountFromEnableNetBankingModel(enableNetBankingModel));
+
+        return new ResponseEntity<>(personalDetailsService.save(personalDetails), HttpStatus.OK);
+    }
+
+
 
 
 
