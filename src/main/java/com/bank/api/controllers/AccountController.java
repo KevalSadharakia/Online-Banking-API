@@ -27,20 +27,20 @@ public class AccountController {
         PersonalDetails personalDetails = personalDetailsService.getDetails(account.getAccountNumber());
 
         if(accountService.isAccountExist(account.getUsername())){
-            return new ResponseEntity<>("Username is already used",HttpStatus.OK);
+            return new ResponseEntity<>("Username is already used",HttpStatus.BAD_REQUEST);
         }
 
         if(accountService.isNetBankingAlreadyEnabled(account.getAccountNumber())){
-            return new ResponseEntity<>("Account already created",HttpStatus.OK);
+            return new ResponseEntity<>("Account already created",HttpStatus.BAD_REQUEST);
         }
 
 
 
         if(personalDetails==null){
-            return new ResponseEntity<>("Invalid account number",HttpStatus.OK);
+            return new ResponseEntity<>("Invalid account number",HttpStatus.BAD_REQUEST);
         }else {
            if(!personalDetails.getContactNumber().equals(account.getPhoneNumber())){
-               return new ResponseEntity<>("Invalid phone number",HttpStatus.OK);
+               return new ResponseEntity<>("Invalid phone number",HttpStatus.BAD_REQUEST);
            }
         }
 
