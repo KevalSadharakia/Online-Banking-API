@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth/login")
+@RequestMapping("/api/auth")
 @CrossOrigin
 public class AuthenticationController {
 
@@ -20,7 +20,7 @@ public class AuthenticationController {
 
     @Autowired
     AccountService accountService;
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody JWTRequest jwtRequest){
 
         if(accountService.isValidAccount(jwtRequest)){
@@ -31,6 +31,11 @@ public class AuthenticationController {
             return new ResponseEntity<>("Invalid User", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping("/validation")
+    public ResponseEntity<Boolean> isValid(){
+        return new ResponseEntity<>(true,HttpStatus.OK);
     }
 
 
