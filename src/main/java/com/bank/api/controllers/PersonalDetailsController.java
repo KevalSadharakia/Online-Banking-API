@@ -17,9 +17,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.Random;
 
+
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
+@CrossOrigin
 public class PersonalDetailsController {
     private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
 
