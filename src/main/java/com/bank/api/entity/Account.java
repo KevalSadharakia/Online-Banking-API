@@ -1,21 +1,20 @@
 package com.bank.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Account {
 
     @Column(nullable =false,unique = true)
@@ -34,8 +33,13 @@ public class Account {
     @Column(nullable = false)
     long balance;
 
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transactions", referencedColumnName = "accountNumber")
-    private Set<Transaction> transactions;
+    @JoinTable(
+            name = "account_transaction",
+            joinColumns = @JoinColumn(name = "accountNumber"),
+            inverseJoinColumns = @JoinColumn(name = "transactionId")
+    )
+    private Set<Transaction> transactions = new HashSet<>();
 
 }

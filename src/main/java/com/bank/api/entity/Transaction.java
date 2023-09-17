@@ -1,16 +1,16 @@
 package com.bank.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction {
@@ -27,7 +27,8 @@ public class Transaction {
     @Column
     long timestamp;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "transactions")
-    private Set<Account> accounts;
+    private Set<Account> accounts = new HashSet<>();
 
 }

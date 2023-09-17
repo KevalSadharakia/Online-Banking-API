@@ -71,10 +71,11 @@ public class AccountLogics {
         Transaction transaction = new Transaction();
         transaction.setFromAccountId(currentAccount.getAccountNumber());
         transaction.setToAccountId(targetAccount.getAccountNumber());
-        transaction.setAmount(transaction.getAmount());
+        transaction.setAmount(transferRequest.getAmount());
         transaction.setTimestamp(System.currentTimeMillis());
 
-
+        transaction.getAccounts().add(targetAccount.getAccount());
+        transaction.getAccounts().add(currentAccount.getAccount());
         transactionService.updateTransaction(transaction);
 
         Set<Transaction> list = currentAccount.getAccount().getTransactions();
@@ -94,7 +95,6 @@ public class AccountLogics {
 
         accountService.updateAccount(currentAccount.getAccount());
         accountService.updateAccount(targetAccount.getAccount());
-
 
 
         TransferResponse transferResponse = new TransferResponse();
