@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.security.Principal;
+
 
 @RestController
 @RequestMapping("/api")
@@ -53,6 +55,7 @@ public class PersonalDetailsController {
         }
         personalDetails.setPassword(enableNetBankingModel.getAccountPassword());
         personalDetails.setUsername(enableNetBankingModel.getUsername());
+
         personalDetails.setAccount(ModelConverter.getAccountFromEnableNetBankingModel(enableNetBankingModel));
 
         return new ResponseEntity<>(personalDetailsService.save(personalDetails), HttpStatus.OK);
@@ -60,6 +63,9 @@ public class PersonalDetailsController {
 
 
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getAccount(@PathVariable int id, Principal principal){
+        return new ResponseEntity<>(personalDetailsService.getDetailsByAccountNumber(id),HttpStatus.OK);
+    }
 
 }

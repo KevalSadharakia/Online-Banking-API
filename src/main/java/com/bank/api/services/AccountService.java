@@ -13,16 +13,10 @@ public class AccountService {
     @Autowired
     AccountRepository accountRepository;
 
-    public void updateBalance(int accountNumber,long balance){
-        Optional<Account> accountOptional = accountRepository.findById(accountNumber);
-        if(accountOptional.isPresent()){
-            Account account = accountOptional.get();
-            account.setBalance(balance);
-            accountRepository.save(account);
-        }else{
-            throw new RuntimeException("Account not found "+accountNumber);
-        }
 
+    public void updateAccount(Account account){
+        if(account==null) throw new RuntimeException("Account not found ");
+        accountRepository.save(account);
     }
 
     public Account getAccount(int accountNumber){

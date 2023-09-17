@@ -6,11 +6,16 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Account {
 
     @Column(nullable =false,unique = true)
@@ -29,5 +34,8 @@ public class Account {
     @Column(nullable = false)
     long balance;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "transactions", referencedColumnName = "accountNumber")
+    private Set<Transaction> transactions;
 
 }

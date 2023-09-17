@@ -1,13 +1,17 @@
 package com.bank.api.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class PersonalDetails {
 
     @Id
@@ -45,8 +49,13 @@ public class PersonalDetails {
     @Size(min = 4, max = 2000, message = "Password length must be greater than 4 characters")
     private String password;
 
+
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account", referencedColumnName = "accountNumber")
     Account account;
+
+
+
 
 }

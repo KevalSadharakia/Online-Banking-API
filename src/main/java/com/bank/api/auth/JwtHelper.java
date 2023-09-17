@@ -18,7 +18,7 @@ public class JwtHelper {
     private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
 
     //requirement :
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60*1000;
 
     //    public static final long JWT_TOKEN_VALIDITY =  60;
     private String secret = "afafasfafaffneeijkemdckehedncfejdkedldlewoiowlkdkdkwp22390339933emedkdemefmedddddjmkdmkemdeccewwwvf";

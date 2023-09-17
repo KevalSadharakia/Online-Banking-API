@@ -4,6 +4,7 @@ import com.bank.api.dto.TransferRequest;
 import com.bank.api.dto.TransferResponse;
 import com.bank.api.entity.Account;
 import com.bank.api.entity.PersonalDetails;
+import com.bank.api.logics.AccountLogics;
 import com.bank.api.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,43 +17,36 @@ import java.security.Principal;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class AccountController {
 
     @Autowired
+    AccountLogics accountLogics;
+
+    @Autowired
     AccountService accountService;
+
     @PostMapping("/transfer")
     public ResponseEntity<Object> transferMoney(@RequestBody TransferRequest transferRequest, Principal principal){
-        if(transferRequest.getAmount()<=0){
-            return new ResponseEntity<>("Invalid balance.", HttpStatus.BAD_REQUEST);
-        }
-        PersonalDetails personalDetails = (PersonalDetails)(((Authentication)principal).getPrincipal());
-        Account senderAccount = personalDetails.getAccount();
-        long balance = senderAccount.getBalance();
-
-        if(balance<transferRequest.getAmount()){
-            return new ResponseEntity<>("Insufficient balance.", HttpStatus.BAD_REQUEST);
-        }
-        accountService.updateBalance(senderAccount.getAccountNumber(),balance- transferRequest.getAmount());
-        Account updatedAccount = accountService.getAccount(senderAccount.getAccountNumber());
-        if(updatedAccount.getBalance()!=balance- transferRequest.getAmount()){
-            return new ResponseEntity<>("Something went wrong 1.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        accountService.updateBalance(transferRequest.getAccountNumber(),balance+ transferRequest.getAmount());
-        Account updatedAccount1 = accountService.getAccount(transferRequest.getAccountNumber());
-
-        if(updatedAccount1.getBalance()!=balance+ transferRequest.getAmount()){
-            return new ResponseEntity<>("Something went wrong 2.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        TransferResponse transferResponse = new TransferResponse();
-        transferResponse.setAccountNumber(updatedAccount.getAccountNumber());
-        transferResponse.setBalance(updatedAccount.getBalance());
-
-        return new ResponseEntity<>(transferResponse,HttpStatus.OK);
-
+        return accountLogics.transferMoney(transferRequest,principal);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getAccount(@PathVariable int id, Principal principal){
+        return accountLogics.getAccount(id,principal);
+    }
+
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<Object> getAccountTransactions(@PathVariable int id, Principal principal){
+        return accountLogics.getAccountTransaction(id,principal);
+    }
+
+    @PutMapping()
+    public ResponseEntity<Object> update(@RequestBody Account account, Principal principal){
+        accountService.updateAccount(account);
+        return new ResponseEntity<>(accountService.getAccount(account.getAccountNumber()),HttpStatus.OK);
+    }
+
 
 
 }
