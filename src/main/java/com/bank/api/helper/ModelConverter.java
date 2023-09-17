@@ -1,7 +1,7 @@
 package com.bank.api.helper;
 
-import com.bank.api.dio.EnableNetBankingModel;
-import com.bank.api.dio.PersonalDetailsRequest;
+import com.bank.api.dto.EnableNetBankingModel;
+import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.entity.Account;
 import com.bank.api.entity.PersonalDetails;
 

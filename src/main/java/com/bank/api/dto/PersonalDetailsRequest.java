@@ -1,4 +1,4 @@
-package com.bank.api.dio;
+package com.bank.api.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;

@@ -1,10 +1,9 @@
 package com.bank.api.controllers;
 
-import com.bank.api.dio.EnableNetBankingModel;
+import com.bank.api.dto.EnableNetBankingModel;
 import com.bank.api.entity.PersonalDetails;
-import com.bank.api.dio.PersonalDetailsRequest;
+import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.helper.ModelConverter;
-import com.bank.api.services.AccountService;
 import com.bank.api.services.PersonalDetailsService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -14,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.util.Random;
 
 
 @RestController

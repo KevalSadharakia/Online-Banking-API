@@ -2,14 +2,16 @@ package com.bank.api.controllers;
 
 
 import com.bank.api.auth.JwtHelper;
-import com.bank.api.dio.JWTRequest;
-import com.bank.api.dio.JWTResponse;
-import com.bank.api.services.AccountService;
+import com.bank.api.dto.JWTRequest;
+import com.bank.api.dto.JWTResponse;
+import com.bank.api.entity.PersonalDetails;
 import com.bank.api.services.PersonalDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,7 +37,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/validation")
-    public ResponseEntity<Boolean> isValid(){
+    public ResponseEntity<Boolean> isValid(Principal principal){
+        PersonalDetails personalDetails = (PersonalDetails) principal;
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 

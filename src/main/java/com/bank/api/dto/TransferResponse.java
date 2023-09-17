@@ -1,13 +1,13 @@
-package com.bank.api.dio;
+package com.bank.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class JWTRequest {
-    String username;
-    String password;
+public class TransferResponse {
+    int accountNumber;
+    long balance;
 }

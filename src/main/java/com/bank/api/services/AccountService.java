@@ -1,7 +1,6 @@
 package com.bank.api.services;
 
 import com.bank.api.entity.Account;
-import com.bank.api.dio.JWTRequest;
 import com.bank.api.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,25 @@ public class AccountService {
 
     @Autowired
     AccountRepository accountRepository;
-    public Object enableNetBanking(Account account){
-        return accountRepository.save(account);
+
+    public void updateBalance(int accountNumber,long balance){
+        Optional<Account> accountOptional = accountRepository.findById(accountNumber);
+        if(accountOptional.isPresent()){
+            Account account = accountOptional.get();
+            account.setBalance(balance);
+            accountRepository.save(account);
+        }else{
+            throw new RuntimeException("Account not found "+accountNumber);
+        }
+
     }
 
-    public boolean isNetBankingAlreadyEnabled(int id){
-        Optional<Account> account = accountRepository.findById(id);
-        return account.isPresent();
+    public Account getAccount(int accountNumber){
+        Optional<Account> accountOptional = accountRepository.findById(accountNumber);
+        if(accountOptional.isPresent()){
+            return accountOptional.get();
+        }
+        return null;
     }
 
 

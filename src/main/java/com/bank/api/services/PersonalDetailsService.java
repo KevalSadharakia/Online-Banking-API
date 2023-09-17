@@ -1,6 +1,6 @@
 package com.bank.api.services;
 
-import com.bank.api.dio.JWTRequest;
+import com.bank.api.dto.JWTRequest;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.repositories.PersonalDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
