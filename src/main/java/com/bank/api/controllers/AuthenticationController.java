@@ -38,7 +38,6 @@ public class AuthenticationController {
 
     @GetMapping("/validation")
     public ResponseEntity<Boolean> isValid(Principal principal){
-        PersonalDetails personalDetails = (PersonalDetails) principal;
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 
