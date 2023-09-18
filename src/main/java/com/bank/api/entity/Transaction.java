@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,8 +28,14 @@ public class Transaction {
     @Column
     long timestamp;
 
+    @Column
+    String fromName;
+
+    @Column
+    String toName;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "transactions")
-    private Set<Account> accounts = new HashSet<>();
+    private List<Account> accounts = new ArrayList<>();
 
 }

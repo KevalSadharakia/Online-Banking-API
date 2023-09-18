@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,6 @@ public class Account {
             joinColumns = @JoinColumn(name = "accountNumber"),
             inverseJoinColumns = @JoinColumn(name = "transactionId")
     )
-    private Set<Transaction> transactions = new HashSet<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
 }

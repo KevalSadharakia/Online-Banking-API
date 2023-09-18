@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionResponse {
-    long transactionId,
-
+    long transactionId;
+    long amount;
+    int accountNumber;
+    String name;
 }

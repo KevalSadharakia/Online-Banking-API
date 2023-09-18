@@ -1,11 +1,14 @@
 package com.bank.api.logics;
 
 import com.bank.api.dto.AccountResponse;
+import com.bank.api.dto.TransactionResponse;
 import com.bank.api.dto.TransferRequest;
 import com.bank.api.dto.TransferResponse;
 import com.bank.api.entity.Account;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.entity.Transaction;
+import com.bank.api.helper.ModelConverter;
+import com.bank.api.helper.ValueExtrecterFromPrinciple;
 import com.bank.api.services.AccountService;
 import com.bank.api.services.PersonalDetailsService;
 import com.bank.api.services.TransactionService;
@@ -71,7 +74,10 @@ public class AccountLogics {
 
         Transaction transaction = new Transaction();
         transaction.setFromAccountId(currentAccount.getAccountNumber());
+        transaction.setFromName(currentAccount.getFirstName()+" "+currentAccount.getLastName());
         transaction.setToAccountId(targetAccount.getAccountNumber());
+        transaction.setToName(targetAccount.getFirstName()+" "+targetAccount.getLastName());
+
         transaction.setAmount(transferRequest.getAmount());
         transaction.setTimestamp(System.currentTimeMillis());
 
@@ -79,17 +85,12 @@ public class AccountLogics {
         transaction.getAccounts().add(currentAccount.getAccount());
         transactionService.updateTransaction(transaction);
 
-        Set<Transaction> list = currentAccount.getAccount().getTransactions();
-        if(list==null){
-            list = new HashSet<>();
-        }
+        List<Transaction> list = currentAccount.getAccount().getTransactions();
         list.add(transaction);
         currentAccount.getAccount().setTransactions(list);
 
-        Set<Transaction> list1 = targetAccount.getAccount().getTransactions();
-        if(list1==null){
-            list1 = new HashSet<>();
-        }
+        List<Transaction> list1 = targetAccount.getAccount().getTransactions();
+
         list1.add(transaction);
         targetAccount.getAccount().setTransactions(list1);
 
@@ -116,6 +117,15 @@ public class AccountLogics {
         return new ResponseEntity<>("account.getTrans()", HttpStatus.OK);
     }
 
+    public ResponseEntity<Object> getTransaction(Principal principal){
+        int accountNumber = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal).getAccountNumber();
+        List<Transaction> list = accountService.getAccount(accountNumber).getTransactions();
+
+        List<TransactionResponse> list1 = ModelConverter.getTransactionResponseListFromTransactionList(list,principal);
+
+        return new ResponseEntity<>(list1, HttpStatus.OK);
+    }
+
     public ResponseEntity<Object> getAccountInfo(Principal principal){
         PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
         Account account = accountService.getAccount(currentAccount.getAccountNumber());
@@ -124,7 +134,8 @@ public class AccountLogics {
         }
         AccountResponse accountResponse = new AccountResponse();
         accountResponse.setAccountNumber(account.getAccountNumber());
-        return new ResponseEntity<>(account, HttpStatus.OK);
+        accountResponse.setBalance(account.getBalance());
+        return new ResponseEntity<>(accountResponse, HttpStatus.OK);
     }
     public ResponseEntity<Object> getAccount(int id,Principal principal){
         PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
@@ -134,4 +145,6 @@ public class AccountLogics {
         }
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
+
+
 }

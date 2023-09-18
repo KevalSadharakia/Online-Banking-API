@@ -4,6 +4,9 @@ import com.bank.api.dto.TransferRequest;
 import com.bank.api.dto.TransferResponse;
 import com.bank.api.entity.Account;
 import com.bank.api.entity.PersonalDetails;
+import com.bank.api.entity.Transaction;
+import com.bank.api.helper.ModelConverter;
+import com.bank.api.helper.ValueExtrecterFromPrinciple;
 import com.bank.api.logics.AccountLogics;
 import com.bank.api.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -47,7 +51,12 @@ public class AccountController {
         return accountLogics.getAccountTransaction(id,principal);
     }
 
-    @PutMapping()
+    @GetMapping("/transactions")
+    public ResponseEntity<Object> getTransactions(Principal principal){
+        return accountLogics.getTransaction(principal);
+    }
+
+    @PutMapping
     public ResponseEntity<Object> update(@RequestBody Account account, Principal principal){
         accountService.updateAccount(account);
         return new ResponseEntity<>(accountService.getAccount(account.getAccountNumber()),HttpStatus.OK);
