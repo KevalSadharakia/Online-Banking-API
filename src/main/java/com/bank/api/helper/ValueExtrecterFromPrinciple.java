@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -14,11 +15,7 @@ import java.security.Principal;
 public class ValueExtrecterFromPrinciple {
 
     public static PersonalDetails getDetailsFromPrinciple(Principal principal){
-        String s = new Gson().toJson(principal);
-        JsonObject jsonObject = JsonParser.parseString(s).getAsJsonObject();
-        JsonElement principle = jsonObject.get("principal");
-
-        PersonalDetails personalDetails = new Gson().fromJson(principle,PersonalDetails.class);
-        return personalDetails;
+        PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
+        return currentAccount;
     }
 }

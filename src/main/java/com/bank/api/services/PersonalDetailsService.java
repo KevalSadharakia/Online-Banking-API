@@ -23,6 +23,14 @@ public class PersonalDetailsService {
         return personalDetailsRepository.existsById(email);
     }
 
+    public PersonalDetails getDetailsByEmail(String email){
+        Optional<PersonalDetails> details =personalDetailsRepository.findById(email);
+        if(details.isPresent()){
+            return details.get();
+        }
+        return null;
+    }
+
     public PersonalDetails getDetailsByAccountNumber(int accountNumber){
         Optional<PersonalDetails> details =personalDetailsRepository.findByAccountNumber(accountNumber);
         if(details.isPresent()){

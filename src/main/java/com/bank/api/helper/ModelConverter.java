@@ -1,5 +1,6 @@
 package com.bank.api.helper;
 
+import com.bank.api.dto.DetailsResponse;
 import com.bank.api.dto.EnableNetBankingModel;
 import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.entity.Account;
@@ -34,6 +35,21 @@ public class ModelConverter {
         personalDetails.setAccountNumber(accountNumber);
 
         return personalDetails;
+    }
+
+    public static DetailsResponse getDetailsResponseFromPersonalDetails(PersonalDetails personalDetails){
+        DetailsResponse detailsResponse = new DetailsResponse();
+        detailsResponse.setAccountNumber(personalDetails.getAccountNumber());
+        detailsResponse.setAddress(personalDetails.getAddress());
+        detailsResponse.setDob(personalDetails.getDob());
+        detailsResponse.setEmail(personalDetails.getEmail());
+        detailsResponse.setFatherName(personalDetails.getFatherName());
+        detailsResponse.setContactNumber(personalDetails.getContactNumber());
+        detailsResponse.setGender(personalDetails.getGender());
+        detailsResponse.setFirstName(personalDetails.getFirstName());
+        detailsResponse.setLastName(personalDetails.getLastName());
+        detailsResponse.setIdentityProofNumber(personalDetails.getIdentityProofNumber());
+        return detailsResponse;
     }
 
 }

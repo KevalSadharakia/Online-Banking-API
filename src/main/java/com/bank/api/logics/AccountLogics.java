@@ -1,5 +1,6 @@
 package com.bank.api.logics;
 
+import com.bank.api.dto.AccountResponse;
 import com.bank.api.dto.TransferRequest;
 import com.bank.api.dto.TransferResponse;
 import com.bank.api.entity.Account;
@@ -115,7 +116,16 @@ public class AccountLogics {
         return new ResponseEntity<>("account.getTrans()", HttpStatus.OK);
     }
 
-
+    public ResponseEntity<Object> getAccountInfo(Principal principal){
+        PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
+        Account account = accountService.getAccount(currentAccount.getAccountNumber());
+        if(account==null){
+            return new ResponseEntity<>("Invalid account number.", HttpStatus.BAD_REQUEST);
+        }
+        AccountResponse accountResponse = new AccountResponse();
+        accountResponse.setAccountNumber(account.getAccountNumber());
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
     public ResponseEntity<Object> getAccount(int id,Principal principal){
         PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
         Account account = accountService.getAccount(id);

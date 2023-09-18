@@ -36,6 +36,12 @@ public class AccountController {
         return accountLogics.getAccount(id,principal);
     }
 
+    @GetMapping()
+    public ResponseEntity<Object> getAccountInfo(Principal principal){
+        return accountLogics.getAccountInfo(principal);
+    }
+
+
     @GetMapping("/{id}/transactions")
     public ResponseEntity<Object> getAccountTransactions(@PathVariable int id, Principal principal){
         return accountLogics.getAccountTransaction(id,principal);
