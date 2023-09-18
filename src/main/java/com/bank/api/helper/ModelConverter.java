@@ -58,8 +58,8 @@ public class ModelConverter {
     public static List<TransactionResponse> getTransactionResponseListFromTransactionList(List<Transaction> transactions, Principal principal){
         List<TransactionResponse> transactionResponses = new ArrayList<>();
         int accountNumber = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal).getAccountNumber();
-        for(Transaction transaction : transactions){
-            transactionResponses.add(getTransactionResponseFromTransaction(transaction,accountNumber));
+        for(int i =transactions.size()-1;i>0;i--){
+            transactionResponses.add(getTransactionResponseFromTransaction(transactions.get(i),accountNumber));
         }
         return transactionResponses;
     }
@@ -75,6 +75,7 @@ public class ModelConverter {
             transactionResponse.setName(transaction.getFromName());
             transactionResponse.setAmount(transaction.getAmount());
         }
+        transactionResponse.setTimestamp(transaction.getTimestamp());
         transactionResponse.setTransactionId(transaction.getTransactionId());
         return transactionResponse;
     }

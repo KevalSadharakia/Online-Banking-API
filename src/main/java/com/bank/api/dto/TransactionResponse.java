@@ -12,4 +12,5 @@ public class TransactionResponse {
     long amount;
     int accountNumber;
     String name;
+    long timestamp;
 }
