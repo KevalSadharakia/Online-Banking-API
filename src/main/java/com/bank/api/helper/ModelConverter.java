@@ -16,7 +16,7 @@ public class ModelConverter {
     public static Account getAccountFromEnableNetBankingModel(EnableNetBankingModel enableNetBankingModel){
         Account account = new Account();
         account.setAccountNumber(enableNetBankingModel.getAccountNumber());
-        account.setBalance(0);
+        account.setBalance(1000);
         account.setPhoneNumber(enableNetBankingModel.getPhoneNumber());
         account.setTransactionPassword(enableNetBankingModel.getTransactionPassword());
         return account;
