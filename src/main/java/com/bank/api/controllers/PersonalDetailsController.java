@@ -1,10 +1,12 @@
 package com.bank.api.controllers;
 
 import com.bank.api.dto.EnableNetBankingModel;
+import com.bank.api.entity.Beneficiary;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.helper.ModelConverter;
 import com.bank.api.helper.ValueExtrecterFromPrinciple;
+import com.bank.api.logics.BeneficiaryLogics;
 import com.bank.api.services.PersonalDetailsService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -28,6 +30,9 @@ public class PersonalDetailsController {
     @Autowired
     PersonalDetailsService personalDetailsService;
 
+
+    @Autowired
+    BeneficiaryLogics beneficiaryLogics;
 
     @PostMapping("/createAccount")
     public ResponseEntity<Object> createAccount(@Valid @RequestBody PersonalDetailsRequest personalDetailsRequest){
@@ -61,6 +66,11 @@ public class PersonalDetailsController {
         personalDetails.setAccount(ModelConverter.getAccountFromEnableNetBankingModel(enableNetBankingModel));
 
         return new ResponseEntity<>(personalDetailsService.save(personalDetails), HttpStatus.OK);
+    }
+
+    @PostMapping("/addBeneficiary")
+    public ResponseEntity<Object> responseEntity(@RequestBody Beneficiary beneficiary,Principal principal){
+        return beneficiaryLogics.addBeneficiary(beneficiary,principal);
     }
 
     @GetMapping("/details")

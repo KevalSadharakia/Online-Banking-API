@@ -7,6 +7,7 @@ import com.bank.api.dto.JWTResponse;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.services.PersonalDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
