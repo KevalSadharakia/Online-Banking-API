@@ -153,7 +153,7 @@ public class AccountLogics {
         transferResponse.setBalance(accountService.getAccount(account.getAccountNumber()).getBalance());
 
         Transaction transaction = new Transaction();
-        transaction.setFromAccountId(depositRequest.getAccountNumber());
+        transaction.setFromAccountId(1);
         transaction.setFromName("Deposit");
         transaction.setToAccountId(depositRequest.getAccountNumber());
         transaction.setAmount(depositRequest.getAmount());
@@ -182,8 +182,8 @@ public class AccountLogics {
         transferResponse.setBalance(accountService.getAccount(account.getAccountNumber()).getBalance());
 
         Transaction transaction = new Transaction();
-        transaction.setToAccountId(depositRequest.getAccountNumber());
-        transaction.setToName("withdraw");
+        transaction.setToAccountId(1);
+        transaction.setToName("Withdraw");
         transaction.setFromAccountId(depositRequest.getAccountNumber());
         transaction.setAmount(depositRequest.getAmount());
         transaction.setTimestamp(System.currentTimeMillis());
