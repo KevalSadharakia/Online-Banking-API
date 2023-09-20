@@ -30,7 +30,7 @@ public class BeneficiaryController {
     }
     @GetMapping("/beneficiaries")
     public ResponseEntity<Object> responseEntity1(Principal principal){
-        return new ResponseEntity<>(beneficiaryLogics.getBeneficiaries(principal), HttpStatus.OK);
+        return beneficiaryLogics.getBeneficiaries(principal);
     }
 
 }
