@@ -14,15 +14,13 @@ public class BeneficiaryService {
     @Autowired
     BeneficiaryRepository beneficiaryRepository;
 
-    @Autowired
-    PersonalDetailsService personalDetailsService;
-
-    public void add(Beneficiary beneficiary){
-       beneficiaryRepository.save(beneficiary);
+    public Object add(Beneficiary beneficiary){
+       return beneficiaryRepository.save(beneficiary);
     }
 
+
     public List<Beneficiary> getBeneficiaryList(String email){
-        return null;
+         return beneficiaryRepository.findAllByAddedByEmail(email);
     }
 
 

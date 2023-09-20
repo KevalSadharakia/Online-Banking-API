@@ -1,9 +1,6 @@
 package com.bank.api.logics;
 
-import com.bank.api.dto.AccountResponse;
-import com.bank.api.dto.TransactionResponse;
-import com.bank.api.dto.TransferRequest;
-import com.bank.api.dto.TransferResponse;
+import com.bank.api.dto.*;
 import com.bank.api.entity.Account;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.entity.Transaction;
@@ -34,55 +31,54 @@ public class AccountLogics {
     @Autowired
     TransactionService transactionService;
 
-    public ResponseEntity<Object> transferMoney(TransferRequest transferRequest, Principal principal){
+    public ResponseEntity<Object> transferMoney(TransferRequest transferRequest, Principal principal) {
 
         PersonalDetails targetAccount = personalDetailsService.getDetailsByAccountNumber(transferRequest.getAccountNumber());
-        PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
+        PersonalDetails currentAccount = (PersonalDetails) (((Authentication) principal).getPrincipal());
 
-        if(targetAccount==null){
+        if (targetAccount == null) {
             return new ResponseEntity<>("Invalid account number.", HttpStatus.BAD_REQUEST);
         }
 
-        if(targetAccount.getAccountNumber()==currentAccount.getAccountNumber()){
+        if (targetAccount.getAccountNumber() == currentAccount.getAccountNumber()) {
             return new ResponseEntity<>("You can not send money to your own account.", HttpStatus.BAD_REQUEST);
         }
 
-        if(!currentAccount.getAccount().getTransactionPassword().equals(transferRequest.getTransactionPassword())){
+        if (!currentAccount.getAccount().getTransactionPassword().equals(transferRequest.getTransactionPassword())) {
             return new ResponseEntity<>("Invalid transaction password.", HttpStatus.BAD_REQUEST);
         }
 
-        if(!targetAccount.getFirstName().equals(transferRequest.getFirstName())){
+        if (!targetAccount.getFirstName().equals(transferRequest.getFirstName())) {
             return new ResponseEntity<>("Invalid name.", HttpStatus.BAD_REQUEST);
         }
-        if(!targetAccount.getLastName().equals(transferRequest.getLastName())){
+        if (!targetAccount.getLastName().equals(transferRequest.getLastName())) {
             return new ResponseEntity<>("Invalid last name.", HttpStatus.BAD_REQUEST);
         }
-        if(transferRequest.getAmount()<=0){
+        if (transferRequest.getAmount() <= 0) {
             return new ResponseEntity<>("Invalid balance.", HttpStatus.BAD_REQUEST);
         }
 
         long balance = currentAccount.getAccount().getBalance();
         long tbalance = targetAccount.getAccount().getBalance();
 
-        if(balance<transferRequest.getAmount()){
+        if (balance < transferRequest.getAmount()) {
             return new ResponseEntity<>("Insufficient balance.", HttpStatus.BAD_REQUEST);
         }
 
 
-        currentAccount.getAccount().setBalance(balance- transferRequest.getAmount());
-        targetAccount.getAccount().setBalance(tbalance+ transferRequest.getAmount());
+        currentAccount.getAccount().setBalance(balance - transferRequest.getAmount());
+        targetAccount.getAccount().setBalance(tbalance + transferRequest.getAmount());
 
         Transaction transaction = new Transaction();
         transaction.setFromAccountId(currentAccount.getAccountNumber());
-        transaction.setFromName(currentAccount.getFirstName()+" "+currentAccount.getLastName());
+        transaction.setFromName(currentAccount.getFirstName() + " " + currentAccount.getLastName());
         transaction.setToAccountId(targetAccount.getAccountNumber());
-        transaction.setToName(targetAccount.getFirstName()+" "+targetAccount.getLastName());
-
+        transaction.setToName(targetAccount.getFirstName() + " " + targetAccount.getLastName());
         transaction.setAmount(transferRequest.getAmount());
         transaction.setTimestamp(System.currentTimeMillis());
-
         transaction.getAccounts().add(targetAccount.getAccount());
         transaction.getAccounts().add(currentAccount.getAccount());
+
         transactionService.updateTransaction(transaction);
 
         List<Transaction> list = currentAccount.getAccount().getTransactions();
@@ -103,33 +99,33 @@ public class AccountLogics {
         transferResponse.setAccountNumber(currentAccount.getAccountNumber());
         transferResponse.setBalance(accountService.getAccount(currentAccount.getAccountNumber()).getBalance());
 
-        return new ResponseEntity<>(targetAccount.getAccount(),HttpStatus.OK);
+        return new ResponseEntity<>(targetAccount.getAccount(), HttpStatus.OK);
 
     }
 
-    public ResponseEntity<Object> getAccountTransaction(int id,Principal principal){
-        PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
+    public ResponseEntity<Object> getAccountTransaction(int id, Principal principal) {
+        PersonalDetails currentAccount = (PersonalDetails) (((Authentication) principal).getPrincipal());
         Account account = accountService.getAccount(id);
-        if(account==null){
+        if (account == null) {
             return new ResponseEntity<>("Invalid account number.", HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>("account.getTrans()", HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getTransaction(Principal principal){
+    public ResponseEntity<Object> getTransaction(Principal principal) {
         int accountNumber = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal).getAccountNumber();
         List<Transaction> list = accountService.getAccount(accountNumber).getTransactions();
 
-        List<TransactionResponse> list1 = ModelConverter.getTransactionResponseListFromTransactionList(list,principal);
+        List<TransactionResponse> list1 = ModelConverter.getTransactionResponseListFromTransactionList(list, principal);
 
         return new ResponseEntity<>(list1, HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getAccountInfo(Principal principal){
-        PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
+    public ResponseEntity<Object> getAccountInfo(Principal principal) {
+        PersonalDetails currentAccount = (PersonalDetails) (((Authentication) principal).getPrincipal());
         Account account = accountService.getAccount(currentAccount.getAccountNumber());
-        if(account==null){
+        if (account == null) {
             return new ResponseEntity<>("Invalid account number.", HttpStatus.BAD_REQUEST);
         }
         AccountResponse accountResponse = new AccountResponse();
@@ -137,14 +133,65 @@ public class AccountLogics {
         accountResponse.setBalance(account.getBalance());
         return new ResponseEntity<>(accountResponse, HttpStatus.OK);
     }
-    public ResponseEntity<Object> getAccount(int id,Principal principal){
-        PersonalDetails currentAccount = (PersonalDetails)(((Authentication)principal).getPrincipal());
+
+    public ResponseEntity<Object> getAccount(int id, Principal principal) {
         Account account = accountService.getAccount(id);
-        if(account==null){
-              return new ResponseEntity<>("Invalid account number.", HttpStatus.BAD_REQUEST);
+        if (account == null) {
+            return new ResponseEntity<>("Invalid account number.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
+    public ResponseEntity<Object> depositMoney(DepositRequest depositRequest, Principal principal) {
+        Account account = accountService.getAccount(depositRequest.getAccountNumber());
+        long amount = account.getBalance()+depositRequest.getAmount();
+        account.setBalance(amount);
+        accountService.updateAccount(account);
 
+        TransferResponse transferResponse = new TransferResponse();
+        transferResponse.setAccountNumber(account.getAccountNumber());
+        transferResponse.setBalance(accountService.getAccount(account.getAccountNumber()).getBalance());
+
+        Transaction transaction = new Transaction();
+        transaction.setFromAccountId(depositRequest.getAccountNumber());
+        transaction.setFromName("Deposit");
+        transaction.setToAccountId(depositRequest.getAccountNumber());
+        transaction.setAmount(depositRequest.getAmount());
+        transaction.setTimestamp(System.currentTimeMillis());
+
+        transactionService.updateTransaction(transaction);
+        account.getTransactions().add(transaction);
+        accountService.updateAccount(account);
+
+
+        return new ResponseEntity<>(transferResponse,HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> withdrawMoney(DepositRequest depositRequest, Principal principal) {
+        Account account = accountService.getAccount(depositRequest.getAccountNumber());
+        long amount = account.getBalance()-depositRequest.getAmount();
+        if(amount<0){
+            return new ResponseEntity<>("Insufficient balance",HttpStatus.BAD_REQUEST);
+        }
+
+        account.setBalance(amount);
+        accountService.updateAccount(account);
+
+        TransferResponse transferResponse = new TransferResponse();
+        transferResponse.setAccountNumber(account.getAccountNumber());
+        transferResponse.setBalance(accountService.getAccount(account.getAccountNumber()).getBalance());
+
+        Transaction transaction = new Transaction();
+        transaction.setToAccountId(depositRequest.getAccountNumber());
+        transaction.setToName("withdraw");
+        transaction.setFromAccountId(depositRequest.getAccountNumber());
+        transaction.setAmount(depositRequest.getAmount());
+        transaction.setTimestamp(System.currentTimeMillis());
+
+        transactionService.updateTransaction(transaction);
+        account.getTransactions().add(transaction);
+        accountService.updateAccount(account);
+
+        return new ResponseEntity<>(transferResponse,HttpStatus.OK);
+    }
 }

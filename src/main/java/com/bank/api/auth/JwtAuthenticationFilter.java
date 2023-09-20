@@ -76,8 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     logger.info("validated");
 
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
+                    authorities.add(new SimpleGrantedAuthority("ROLE_"+personalDetails.getRole()));
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(personalDetails, "password", authorities);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);

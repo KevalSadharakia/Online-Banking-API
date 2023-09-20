@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -55,9 +56,8 @@ public class PersonalDetails {
     @JoinColumn(name = "account", referencedColumnName = "accountNumber")
     Account account;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "beneficiary", referencedColumnName = "email")
-    List<Beneficiary> beneficiaries;
+    @Column
+    String role;
 
 
 }
