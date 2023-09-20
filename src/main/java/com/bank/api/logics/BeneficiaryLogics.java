@@ -48,4 +48,11 @@ public class BeneficiaryLogics {
         return new ResponseEntity<>("Saved successfully", HttpStatus.OK);
     }
 
+    public ResponseEntity<Object> getBeneficiaryList(Principal principal){
+        PersonalDetails personalDetails = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal);
+        PersonalDetails personalDetails1 =  personalDetailsService.getDetailsByAccountNumber(personalDetails.getAccountNumber());
+        List<Beneficiary> list =personalDetails1.getBeneficiaries();
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
 }
