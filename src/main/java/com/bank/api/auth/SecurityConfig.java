@@ -3,6 +3,7 @@ package com.bank.api.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -17,6 +18,7 @@ import java.util.Arrays;
 
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
 
@@ -39,15 +41,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-
         http.csrf(c->c.disable()).authorizeRequests()
                 .requestMatchers("/api/auth/login", "/api/createAccount", "/api/enableNetBanking").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).cors(c->corsConfigurationSource());
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(c->corsConfigurationSource());
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

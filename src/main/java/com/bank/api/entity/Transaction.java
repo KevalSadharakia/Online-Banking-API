@@ -34,6 +34,7 @@ public class Transaction {
     @Column
     String toName;
 
+
     @JsonIgnore
     @ManyToMany(mappedBy = "transactions")
     private List<Account> accounts = new ArrayList<>();

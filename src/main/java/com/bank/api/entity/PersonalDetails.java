@@ -7,6 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -38,7 +42,6 @@ public class PersonalDetails {
     @Column(nullable =false,unique = true)
     String contactNumber;
 
-
     @Column(nullable =false)
     private String gender;
 
@@ -49,13 +52,12 @@ public class PersonalDetails {
     @Size(min = 4, max = 2000, message = "Password length must be greater than 4 characters")
     private String password;
 
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account", referencedColumnName = "accountNumber")
     Account account;
 
-
+    @Column
+    String role;
 
 
 }

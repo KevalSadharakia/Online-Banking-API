@@ -1,10 +1,14 @@
 package com.bank.api.controllers;
 
+import com.bank.api.dto.BeneficiaryRequest;
 import com.bank.api.dto.EnableNetBankingModel;
+import com.bank.api.entity.Beneficiary;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.helper.ModelConverter;
 import com.bank.api.helper.ValueExtrecterFromPrinciple;
+import com.bank.api.logics.BeneficiaryLogics;
+import com.bank.api.services.BeneficiaryService;
 import com.bank.api.services.PersonalDetailsService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -27,6 +31,7 @@ public class PersonalDetailsController {
 
     @Autowired
     PersonalDetailsService personalDetailsService;
+
 
 
     @PostMapping("/createAccount")
