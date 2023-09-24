@@ -8,6 +8,7 @@ class OnlineBankingApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
