@@ -52,6 +52,9 @@ public class ModelConverter {
         detailsResponse.setFirstName(personalDetails.getFirstName());
         detailsResponse.setLastName(personalDetails.getLastName());
         detailsResponse.setIdentityProofNumber(personalDetails.getIdentityProofNumber());
+        detailsResponse.setBalance(personalDetails.getAccount().getBalance());
+        detailsResponse.setUsername(personalDetails.getUsername());
+
         return detailsResponse;
     }
 

@@ -16,11 +16,15 @@ public class DetailsResponse {
     String lastName;
     String fatherName;
     String dob;
+    String gender;
+    String username;
+
+    String email;
     String address;
     String identityProofNumber;
     String contactNumber;
-    String email;
+
     int accountNumber;
-    String gender;
+    long balance;
 }
 
