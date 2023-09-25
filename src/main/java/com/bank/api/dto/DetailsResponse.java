@@ -23,3 +23,4 @@ public class DetailsResponse {
     int accountNumber;
     String gender;
 }
+

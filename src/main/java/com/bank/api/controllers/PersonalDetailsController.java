@@ -2,6 +2,7 @@ package com.bank.api.controllers;
 
 import com.bank.api.dto.BeneficiaryRequest;
 import com.bank.api.dto.EnableNetBankingModel;
+import com.bank.api.dto.UpdatePassword;
 import com.bank.api.entity.Beneficiary;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.dto.PersonalDetailsRequest;
@@ -67,6 +68,27 @@ public class PersonalDetailsController {
 
         return new ResponseEntity<>(personalDetailsService.save(personalDetails), HttpStatus.OK);
     }
+
+    @PostMapping("/updatePassword")
+    public ResponseEntity<Object> updatePassword(@Valid @RequestBody UpdatePassword updatePassword,Principal principal){
+
+        PersonalDetails personalDetails = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal);
+        personalDetails = personalDetailsService.getDetailsByEmail(personalDetails.getEmail());
+
+        if(!personalDetails.getPassword().equals(updatePassword.getCurrentPassword())){
+            return new ResponseEntity<>("Wrong password", HttpStatus.BAD_REQUEST);
+        }
+        if(updatePassword.getNewPassword().length()<4){
+            return new ResponseEntity<>("Password must be greater than 3 digit", HttpStatus.BAD_REQUEST);
+        }
+
+        personalDetails.setPassword(updatePassword.getNewPassword());
+        personalDetailsService.save(personalDetails);
+
+
+        return new ResponseEntity<>("Password is updated.", HttpStatus.OK);
+    }
+
 
     @GetMapping("/details")
     public ResponseEntity<Object> getDetails(Principal principal){
