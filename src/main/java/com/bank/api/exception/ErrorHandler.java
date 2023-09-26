@@ -35,11 +35,7 @@ public class ErrorHandler {
         return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleEx(Exception ex){
-        return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 
-    }
 
 
 

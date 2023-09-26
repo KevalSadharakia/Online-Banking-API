@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountResponse {
+public class ForgotUsernameRequest {
     int accountNumber;
-    long balance;
-    boolean admin;
+    String aadharNumber;
 }

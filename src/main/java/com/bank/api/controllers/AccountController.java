@@ -63,6 +63,7 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getAccount(@PathVariable int id, Principal principal){
+        logger.info("id"+id);
         return accountLogics.getAccount(id,principal);
     }
 

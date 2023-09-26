@@ -42,7 +42,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(c->c.disable()).authorizeRequests()
-                .requestMatchers("/api/auth/login", "/api/createAccount", "/api/enableNetBanking").permitAll()
+                .requestMatchers("/api/auth/login", "/api/createAccount", "/api/enableNetBanking","/api/username","/api/forgotPassword").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))

@@ -1,11 +1,8 @@
 package com.bank.api.controllers;
 
-import com.bank.api.dto.BeneficiaryRequest;
-import com.bank.api.dto.EnableNetBankingModel;
-import com.bank.api.dto.UpdatePassword;
+import com.bank.api.dto.*;
 import com.bank.api.entity.Beneficiary;
 import com.bank.api.entity.PersonalDetails;
-import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.helper.ModelConverter;
 import com.bank.api.helper.ValueExtrecterFromPrinciple;
 import com.bank.api.logics.BeneficiaryLogics;
@@ -17,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -89,6 +87,43 @@ public class PersonalDetailsController {
         return new ResponseEntity<>("Password is updated.", HttpStatus.OK);
     }
 
+    @PostMapping("/username")
+    public ResponseEntity<Object> getUsername(@Valid @RequestBody ForgotUsernameRequest forgotUsernameRequest){
+
+
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(forgotUsernameRequest.getAccountNumber());
+
+        if(personalDetails==null){
+            return new ResponseEntity<>("No account found!", HttpStatus.BAD_REQUEST);
+        }
+        if(!personalDetails.getIdentityProofNumber().equals(forgotUsernameRequest.getAadharNumber())){
+            return new ResponseEntity<>("Wrong aadhar number", HttpStatus.BAD_REQUEST);
+        }
+
+
+        return new ResponseEntity<>("Your username is "+personalDetails.getUsername(), HttpStatus.OK);
+    }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<Object> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest){
+
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(forgotPasswordRequest.getAccountNumber());
+        if(personalDetails==null){
+            return new ResponseEntity<>("No account found!", HttpStatus.BAD_REQUEST);
+        }
+        if(!personalDetails.getIdentityProofNumber().equals(forgotPasswordRequest.getAadharNumber())){
+            return new ResponseEntity<>("Wrong aadhar number", HttpStatus.BAD_REQUEST);
+        }
+        if(!personalDetails.getUsername().equals(forgotPasswordRequest.getUserId())){
+            return new ResponseEntity<>("Wrong User ID", HttpStatus.BAD_REQUEST);
+        }
+
+        personalDetails.setPassword(forgotPasswordRequest.getNewPassword());
+        personalDetailsService.save(personalDetails);
+        return new ResponseEntity<>("Password is updated.", HttpStatus.OK);
+
+    }
+
 
     @GetMapping("/details")
     public ResponseEntity<Object> getDetails(Principal principal){
@@ -99,9 +134,15 @@ public class PersonalDetailsController {
         return new ResponseEntity<>(ModelConverter.getDetailsResponseFromPersonalDetails(personalDetails),HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getAccount(@PathVariable int id, Principal principal){
-        return new ResponseEntity<>(personalDetailsService.getDetailsByAccountNumber(id),HttpStatus.OK);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/details/{id}")
+    public ResponseEntity<Object> getDetailsOfAPerson(@PathVariable int id, Principal principal){
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(id);
+        if(personalDetails==null){
+            return new ResponseEntity<>("Account Not Found",HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(ModelConverter.getDetailsResponseFromPersonalDetails(personalDetails),HttpStatus.OK);
     }
+
 
 }

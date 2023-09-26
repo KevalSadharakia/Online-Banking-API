@@ -131,6 +131,12 @@ public class AccountLogics {
         AccountResponse accountResponse = new AccountResponse();
         accountResponse.setAccountNumber(account.getAccountNumber());
         accountResponse.setBalance(account.getBalance());
+
+        if(currentAccount.getRole().equals("ADMIN")){
+            accountResponse.setAdmin(true);
+        }else {
+            accountResponse.setAdmin(false);
+        }
         return new ResponseEntity<>(accountResponse, HttpStatus.OK);
     }
 
