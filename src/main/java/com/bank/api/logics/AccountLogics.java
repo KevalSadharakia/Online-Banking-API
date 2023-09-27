@@ -132,7 +132,7 @@ public class AccountLogics {
         accountResponse.setAccountNumber(account.getAccountNumber());
         accountResponse.setBalance(account.getBalance());
 
-        if(currentAccount.getRole().equals("ADMIN")){
+        if(currentAccount.getRole()!=null && currentAccount.getRole().equals("ADMIN")){
             accountResponse.setAdmin(true);
         }else {
             accountResponse.setAdmin(false);
