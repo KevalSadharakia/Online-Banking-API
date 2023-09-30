@@ -6,6 +6,7 @@ import com.bank.api.repositories.PersonalDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -70,6 +71,18 @@ public class PersonalDetailsService {
         }else {
             return false;
         }
+    }
+
+    public List<PersonalDetails> getAllPendingRequests(){
+        return personalDetailsRepository.findAllByAccepted(null);
+    }
+
+    public List<PersonalDetails> getAllActivatedAccount(){
+        return personalDetailsRepository.findAllByAccepted(true);
+    }
+
+    public List<PersonalDetails> getAllAccounts(){
+        return personalDetailsRepository.findAll();
     }
 
 

@@ -59,5 +59,13 @@ public class PersonalDetails {
     @Column
     String role;
 
+    @Column
+    Boolean active;
+
+    @Column
+    Boolean accepted;
+
+
+
 
 }

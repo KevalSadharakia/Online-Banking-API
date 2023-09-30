@@ -36,6 +36,9 @@ public class ModelConverter {
         Random random = new Random();
         int accountNumber = random.nextInt(0,Integer.MAX_VALUE);
         personalDetails.setAccountNumber(accountNumber);
+        personalDetails.setRole("USER");
+        personalDetails.setActive(false);
+        personalDetails.setAccepted(null);
 
         return personalDetails;
     }
@@ -52,14 +55,22 @@ public class ModelConverter {
         detailsResponse.setFirstName(personalDetails.getFirstName());
         detailsResponse.setLastName(personalDetails.getLastName());
         detailsResponse.setIdentityProofNumber(personalDetails.getIdentityProofNumber());
-        detailsResponse.setBalance(personalDetails.getAccount().getBalance());
+        if(personalDetails.getAccount()!=null)detailsResponse.setBalance(personalDetails.getAccount().getBalance());
         detailsResponse.setUsername(personalDetails.getUsername());
         if(personalDetails.getRole().equals("ADMIN")){
             detailsResponse.setAdmin(true);
         }else {
             detailsResponse.setAdmin(false);
         }
+        if(personalDetails.getAccepted()==null){
+            detailsResponse.setAccepted("Pending");
+        }else if(personalDetails.getAccepted()==true){
+            detailsResponse.setAccepted("Accepted");
+        }else if(personalDetails.getAccepted()==false){
+            detailsResponse.setAccepted("Rejected");
+        }
 
+        detailsResponse.setActive(personalDetails.getActive());
 
         return detailsResponse;
     }
