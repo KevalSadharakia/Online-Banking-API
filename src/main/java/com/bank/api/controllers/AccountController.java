@@ -2,24 +2,15 @@ package com.bank.api.controllers;
 
 import com.bank.api.dto.DepositRequest;
 import com.bank.api.dto.TransferRequest;
-import com.bank.api.dto.TransferResponse;
 import com.bank.api.entity.Account;
-import com.bank.api.entity.PersonalDetails;
-import com.bank.api.entity.Transaction;
-import com.bank.api.helper.ModelConverter;
-import com.bank.api.helper.ValueExtrecterFromPrinciple;
 import com.bank.api.logics.AccountLogics;
 import com.bank.api.services.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -84,6 +75,8 @@ public class AccountController {
     public ResponseEntity<Object> deposit(@RequestBody DepositRequest depositRequest, Principal principal) {
         return accountLogics.depositMoney(depositRequest,principal);
     }
+
+
 
 
 }

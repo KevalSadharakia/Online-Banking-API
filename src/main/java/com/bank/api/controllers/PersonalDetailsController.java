@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -37,9 +39,18 @@ public class PersonalDetailsController {
     public ResponseEntity<Object> createAccount(@Valid @RequestBody PersonalDetailsRequest personalDetailsRequest){
 
         if(personalDetailsService.isExist(personalDetailsRequest.getEmail())){
-            return new ResponseEntity<>("Email address is used", HttpStatus.BAD_REQUEST) ;
+            return new ResponseEntity<>("Email address is used.", HttpStatus.BAD_REQUEST) ;
         }
-        return new ResponseEntity<>(personalDetailsService.save(ModelConverter.getPersonalDetailsFromPersonalDetailsRequest(personalDetailsRequest)), HttpStatus.CREATED) ;
+
+        PersonalDetails personalDetails = ModelConverter.getPersonalDetailsFromPersonalDetailsRequest(personalDetailsRequest);
+        Object pe = personalDetailsService.save(personalDetails);
+        if(pe==null){
+            return new ResponseEntity<>("Something went wrong.", HttpStatus.CREATED) ;
+        }
+        AccountCreatedResponse accountCreatedResponse = new AccountCreatedResponse();
+        accountCreatedResponse.setAccountNumber(personalDetails.getAccountNumber());
+        accountCreatedResponse.setName(personalDetails.getFirstName()+" "+personalDetails.getLastName());
+        return new ResponseEntity<>(accountCreatedResponse, HttpStatus.CREATED) ;
 
     }
 
@@ -48,6 +59,14 @@ public class PersonalDetailsController {
     public ResponseEntity<Object> enableNetBanking(@Valid @RequestBody EnableNetBankingModel enableNetBankingModel){
 
         PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(enableNetBankingModel.getAccountNumber());
+
+        if(personalDetails.getAccepted()==null){
+            return new ResponseEntity<>("Your account opening request is pending.",HttpStatus.BAD_REQUEST);
+        }
+        if(!personalDetails.getAccepted()){
+            return new ResponseEntity<>("Your account opening request is rejected.",HttpStatus.BAD_REQUEST);
+        }
+
         if(personalDetailsService.isNetBankingAlreadyEnabled(enableNetBankingModel.getAccountNumber())){
             return new ResponseEntity<>("Account already created",HttpStatus.BAD_REQUEST);
         }
@@ -64,7 +83,13 @@ public class PersonalDetailsController {
 
         personalDetails.setAccount(ModelConverter.getAccountFromEnableNetBankingModel(enableNetBankingModel));
 
-        return new ResponseEntity<>(personalDetailsService.save(personalDetails), HttpStatus.OK);
+        Object object = personalDetailsService.save(personalDetails);
+        if(object==null){
+            return new ResponseEntity<>("Something went wrong.", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Netbanking enabled.", HttpStatus.OK);
+        }
+
     }
 
     @PostMapping("/updatePassword")
@@ -143,6 +168,94 @@ public class PersonalDetailsController {
         }
         return new ResponseEntity<>(ModelConverter.getDetailsResponseFromPersonalDetails(personalDetails),HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/activate")
+    public ResponseEntity<Object> activate(@RequestBody ActivateDeactivateRequest activateDeactivateRequest, Principal principal){
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(activateDeactivateRequest.getAccountNumber());
+        personalDetails.setActive(true);
+        if(personalDetails==null){
+            return new ResponseEntity<>("Account Not Found",HttpStatus.BAD_REQUEST);
+        }
+        personalDetailsService.save(personalDetails);
+        return new ResponseEntity<>("Account is enabled.",HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/deactivate")
+    public ResponseEntity<Object> deactivate(@RequestBody ActivateDeactivateRequest activateDeactivateRequest, Principal principal){
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(activateDeactivateRequest.getAccountNumber());
+        personalDetails.setActive(false);
+        if(personalDetails==null){
+            return new ResponseEntity<>("Account Not Found.",HttpStatus.BAD_REQUEST);
+        }
+        personalDetailsService.save(personalDetails);
+        return new ResponseEntity<>("Account is disabled.",HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/accept")
+    public ResponseEntity<Object> accept(@RequestBody ActivateDeactivateRequest activateDeactivateRequest, Principal principal){
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(activateDeactivateRequest.getAccountNumber());
+        personalDetails.setActive(true);
+        personalDetails.setAccepted(true);
+        if(personalDetails==null){
+            return new ResponseEntity<>("Account Not Found",HttpStatus.BAD_REQUEST);
+        }
+        personalDetailsService.save(personalDetails);
+        return new ResponseEntity<>("Account is accepted.",HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/reject")
+    public ResponseEntity<Object> reject(@RequestBody ActivateDeactivateRequest activateDeactivateRequest, Principal principal){
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(activateDeactivateRequest.getAccountNumber());
+        personalDetails.setActive(false);
+        personalDetails.setAccepted(false);
+        if(personalDetails==null){
+            return new ResponseEntity<>("Account Not Found",HttpStatus.BAD_REQUEST);
+        }
+        personalDetailsService.save(personalDetails);
+        return new ResponseEntity<>("Account is rejected.",HttpStatus.OK);
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/pendingRequests")
+    public ResponseEntity<Object> getPendingRequest(Principal principal){
+        List<PersonalDetails> personalDetailsList = personalDetailsService.getAllPendingRequests();
+        if(personalDetailsList==null){
+            return new ResponseEntity<>("Account Not Found",HttpStatus.BAD_REQUEST);
+        }
+
+        List<DetailsResponse> list = new ArrayList<>();
+        for(PersonalDetails personalDetails : personalDetailsList){
+            list.add(ModelConverter.getDetailsResponseFromPersonalDetails(personalDetails));
+        }
+
+        return new ResponseEntity<>(list,HttpStatus.OK);
+
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/profiles")
+    public ResponseEntity<Object> getAccounts(Principal principal){
+        PersonalDetails myDetails = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal);
+        List<PersonalDetails> personalDetailsList = personalDetailsService.getAllActivatedAccount();
+
+        List<DetailsResponse> list = new ArrayList<>();
+        for(PersonalDetails personalDetails : personalDetailsList){
+            if(personalDetails.getEmail().equals(myDetails.getEmail()))continue;
+            list.add(ModelConverter.getDetailsResponseFromPersonalDetails(personalDetails));
+        }
+
+        return new ResponseEntity<>(list,HttpStatus.OK);
+
+    }
+
+
+
+
 
 
 }

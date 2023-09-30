@@ -26,6 +26,8 @@ public class DetailsResponse {
 
     int accountNumber;
     long balance;
-    boolean admin;
+    Boolean admin;
+    Boolean active;
+    String accepted;
 }
 

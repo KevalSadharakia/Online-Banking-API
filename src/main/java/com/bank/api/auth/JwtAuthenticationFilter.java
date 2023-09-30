@@ -2,6 +2,7 @@ package com.bank.api.auth;
 
 import com.bank.api.entity.Account;
 import com.bank.api.entity.PersonalDetails;
+import com.bank.api.exception.AccountDisableException;
 import com.bank.api.services.AccountService;
 import com.bank.api.services.PersonalDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +72,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             PersonalDetails personalDetails = personalDetailsService.getDetailsByUsername(username);
 
             if (username != null && personalDetails!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
-
+                if(personalDetails.getActive()==false){
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    PrintWriter writer = response.getWriter();
+                    writer.println("Account is disabled.");
+                    return;
+                }
                 Boolean validateToken = this.jwtHelper.validateToken(token, username);
 
                 if (validateToken) {
@@ -80,9 +88,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(personalDetails, "password", authorities);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
+                    filterChain.doFilter(request, response);
                 } else {
                     logger.info("Validation fails !!");
+                    filterChain.doFilter(request, response);
                 }
 
 
@@ -91,10 +100,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } else {
             logger.info("Invalid Header Value !! ");
+            filterChain.doFilter(request, response);
         }
 
 
-        filterChain.doFilter(request, response);
+
+        //
 
     }
 }

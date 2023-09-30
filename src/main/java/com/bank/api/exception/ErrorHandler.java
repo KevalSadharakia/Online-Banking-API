@@ -36,6 +36,13 @@ public class ErrorHandler {
 
     }
 
+    @ExceptionHandler(AccountDisableException.class)
+    public ResponseEntity<String> handleInvalidMethodArgument(AccountDisableException ex){
+        return new ResponseEntity<String>("eerr",HttpStatus.BAD_REQUEST);
+
+    }
+
+
 
 
 
