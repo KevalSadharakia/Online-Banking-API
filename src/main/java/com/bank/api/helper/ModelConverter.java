@@ -54,7 +54,7 @@ public class ModelConverter {
         detailsResponse.setIdentityProofNumber(personalDetails.getIdentityProofNumber());
         detailsResponse.setBalance(personalDetails.getAccount().getBalance());
         detailsResponse.setUsername(personalDetails.getUsername());
-        if(personalDetails.getRole().equals("ADMIN")){
+        if(personalDetails.getRole()!=null && personalDetails.getRole().equals("ADMIN")){
             detailsResponse.setAdmin(true);
         }else {
             detailsResponse.setAdmin(false);
