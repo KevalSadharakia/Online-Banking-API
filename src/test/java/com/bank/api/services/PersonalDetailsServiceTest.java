@@ -76,8 +76,4 @@ public class PersonalDetailsServiceTest {
         assertNull(retrievedDetails);
     }
 
-    // Add similar tests for other methods as needed
-
-    // ...
-
 }
