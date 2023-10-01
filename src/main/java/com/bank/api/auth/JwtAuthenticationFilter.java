@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             PersonalDetails personalDetails = personalDetailsService.getDetailsByUsername(username);
 
             if (username != null && personalDetails!=null&& SecurityContextHolder.getContext().getAuthentication() == null) {
-                if(personalDetails.getActive()==false){
+                if( personalDetails.getActive()==null || personalDetails.getActive()==false){
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     PrintWriter writer = response.getWriter();
                     writer.println("Account is disabled.");
