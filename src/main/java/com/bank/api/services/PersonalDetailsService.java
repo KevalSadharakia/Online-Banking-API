@@ -85,5 +85,8 @@ public class PersonalDetailsService {
         return personalDetailsRepository.findAll();
     }
 
+    public long getAccountCount(){
+        return personalDetailsRepository.count();
+    }
 
 }

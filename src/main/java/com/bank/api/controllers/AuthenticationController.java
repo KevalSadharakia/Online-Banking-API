@@ -5,6 +5,7 @@ import com.bank.api.auth.JwtHelper;
 import com.bank.api.dto.JWTRequest;
 import com.bank.api.dto.JWTResponse;
 import com.bank.api.entity.PersonalDetails;
+import com.bank.api.helper.ValueExtrecterFromPrinciple;
 import com.bank.api.services.PersonalDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Role;
@@ -38,8 +39,12 @@ public class AuthenticationController {
     }
 
     @GetMapping("/validation")
-    public ResponseEntity<Boolean> isValid(Principal principal){
-        return new ResponseEntity<>(true,HttpStatus.OK);
+    public ResponseEntity<Object> isValid(Principal principal){
+        PersonalDetails personalDetails = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal);
+        if(personalDetails==null){
+            return new ResponseEntity<>(false,HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>("aaa",HttpStatus.OK);
     }
 
 

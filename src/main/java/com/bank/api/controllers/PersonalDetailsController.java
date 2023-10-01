@@ -41,12 +41,14 @@ public class PersonalDetailsController {
         if(personalDetailsService.isExist(personalDetailsRequest.getEmail())){
             return new ResponseEntity<>("Email address is used.", HttpStatus.BAD_REQUEST) ;
         }
+        long count = personalDetailsService.getAccountCount();
 
-        PersonalDetails personalDetails = ModelConverter.getPersonalDetailsFromPersonalDetailsRequest(personalDetailsRequest);
+        PersonalDetails personalDetails = ModelConverter.getPersonalDetailsFromPersonalDetailsRequest(personalDetailsRequest,count);
         Object pe = personalDetailsService.save(personalDetails);
         if(pe==null){
             return new ResponseEntity<>("Something went wrong.", HttpStatus.CREATED) ;
         }
+
         AccountCreatedResponse accountCreatedResponse = new AccountCreatedResponse();
         accountCreatedResponse.setAccountNumber(personalDetails.getAccountNumber());
         accountCreatedResponse.setName(personalDetails.getFirstName()+" "+personalDetails.getLastName());
@@ -59,11 +61,12 @@ public class PersonalDetailsController {
     public ResponseEntity<Object> enableNetBanking(@Valid @RequestBody EnableNetBankingModel enableNetBankingModel){
 
         PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(enableNetBankingModel.getAccountNumber());
+        long count = personalDetailsService.getAccountCount();
 
-        if(personalDetails.getAccepted()==null){
+        if(count>1&& personalDetails.getAccepted()==null){
             return new ResponseEntity<>("Your account opening request is pending.",HttpStatus.BAD_REQUEST);
         }
-        if(!personalDetails.getAccepted()){
+        if(count>1 && !personalDetails.getAccepted()){
             return new ResponseEntity<>("Your account opening request is rejected.",HttpStatus.BAD_REQUEST);
         }
 

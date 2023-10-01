@@ -22,7 +22,7 @@ public class ModelConverter {
         return account;
     }
 
-    public static PersonalDetails getPersonalDetailsFromPersonalDetailsRequest(PersonalDetailsRequest personalDetailsRequest){
+    public static PersonalDetails getPersonalDetailsFromPersonalDetailsRequest(PersonalDetailsRequest personalDetailsRequest,long count){
         PersonalDetails personalDetails = new PersonalDetails();
         personalDetails.setFirstName(personalDetailsRequest.getFirstName());
         personalDetails.setLastName(personalDetailsRequest.getLastName());
@@ -36,9 +36,17 @@ public class ModelConverter {
         Random random = new Random();
         int accountNumber = random.nextInt(0,Integer.MAX_VALUE);
         personalDetails.setAccountNumber(accountNumber);
-        personalDetails.setRole("USER");
-        personalDetails.setActive(false);
-        personalDetails.setAccepted(null);
+        if(count==0){
+            personalDetails.setRole("ADMIN");
+            personalDetails.setActive(true);
+            personalDetails.setAccepted(true);
+        }else {
+            personalDetails.setRole("USER");
+            personalDetails.setActive(false);
+            personalDetails.setAccepted(null);
+        }
+
+
 
         return personalDetails;
     }
@@ -78,7 +86,7 @@ public class ModelConverter {
     public static List<TransactionResponse> getTransactionResponseListFromTransactionList(List<Transaction> transactions, Principal principal){
         List<TransactionResponse> transactionResponses = new ArrayList<>();
         int accountNumber = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal).getAccountNumber();
-        for(int i =transactions.size()-1;i>0;i--){
+        for(int i =transactions.size()-1;i>=0;i--){
             transactionResponses.add(getTransactionResponseFromTransaction(transactions.get(i),accountNumber));
         }
         return transactionResponses;
