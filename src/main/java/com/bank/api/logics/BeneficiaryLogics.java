@@ -32,12 +32,19 @@ public class BeneficiaryLogics {
         PersonalDetails personalDetails =  personalDetailsService.getDetailsByAccountNumber(beneficiaryRequest.getAccountNumber());
         PersonalDetails personalDetails1 = ValueExtrecterFromPrinciple.getDetailsFromPrinciple(principal);
 
-        if(personalDetails1==null){
+        if(personalDetails==null){
             return new ResponseEntity<>("Invalid account number", HttpStatus.BAD_REQUEST);
         }
+        System.out.println(personalDetails.getFirstName());
+        System.out.println(beneficiaryRequest.getFirstName());
+
+        System.out.println(personalDetails.getLastName());
+        System.out.println(beneficiaryRequest.getLastName());
+
         if(!personalDetails.getFirstName().equals(beneficiaryRequest.getFirstName()) || !personalDetails.getLastName().equals(beneficiaryRequest.getLastName())){
             return new ResponseEntity<>("Name not matched", HttpStatus.BAD_REQUEST);
         }
+
         List<Beneficiary> list = beneficiaryService.getBeneficiaryList(personalDetails1.getEmail());
         for(int i =0;i<list.size();i++){
             if(list.get(i).getAccountNumber()== beneficiaryRequest.getAccountNumber()){
