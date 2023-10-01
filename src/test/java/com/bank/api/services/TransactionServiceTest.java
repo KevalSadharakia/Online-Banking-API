@@ -28,13 +28,10 @@ public class TransactionServiceTest {
     public void testUpdateTransaction() {
         Transaction transaction = new Transaction();
 
-        // Mock the behavior of the transactionRepository.save method
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        // Call the updateTransaction method
         transactionService.updateTransaction(transaction);
 
-        // Verify that transactionRepository.save was called with the transaction object
         verify(transactionRepository, times(1)).save(transaction);
     }
 }
