@@ -39,8 +39,6 @@ public class PersonalDetailsControllerTest {
     @Test
     public void testCreateAccountEmailInUse() {
         PersonalDetailsRequest request = new PersonalDetailsRequest();
-        // Initialize request with required data
-
         when(personalDetailsService.isExist(request.getEmail())).thenReturn(true);
 
         ResponseEntity<Object> response = personalDetailsController.createAccount(request);
@@ -52,8 +50,6 @@ public class PersonalDetailsControllerTest {
     @Test
     public void testGetUsernameNoAccountFound() {
         ForgotUsernameRequest request = new ForgotUsernameRequest();
-        // Initialize request with required data
-
         when(personalDetailsService.getDetailsByAccountNumber(request.getAccountNumber())).thenReturn(null);
 
         ResponseEntity<Object> response = personalDetailsController.getUsername(request);
