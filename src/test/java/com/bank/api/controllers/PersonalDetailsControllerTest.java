@@ -2,9 +2,13 @@ package com.bank.api.controllers;
 
 import com.bank.api.controllers.PersonalDetailsController;
 import com.bank.api.dto.*;
+import com.bank.api.dto.EnableNetBankingModel;
+import com.bank.api.dto.PersonalDetailsRequest;
 import com.bank.api.entity.PersonalDetails;
 import com.bank.api.services.PersonalDetailsService;
 import org.junit.jupiter.api.BeforeEach;
+import com.bank.api.helper.ModelConverter;
+import com.bank.api.helper.ValueExtrecterFromPrinciple;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,6 +20,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -66,6 +71,19 @@ public class PersonalDetailsControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("No account found!", response.getBody());
+    }
+
+    @Test
+    public void testCreateAccount_DuplicateEmail() {
+        PersonalDetailsRequest personalDetailsRequest = new PersonalDetailsRequest();
+        personalDetailsRequest.setEmail("duplicate@example.com");
+
+        when(personalDetailsService.isExist(personalDetailsRequest.getEmail())).thenReturn(true);
+
+        ResponseEntity<Object> response = personalDetailsController.createAccount(personalDetailsRequest);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Email address is used.", response.getBody());
     }
 
 }
