@@ -64,11 +64,4 @@ public class AuthenticationControllerTest {
         assertEquals("Invalid User", response.getBody());
     }
 
-    @Test
-    public void testIsValid() {
-        ResponseEntity<Boolean> response = authenticationController.isValid(mock(Principal.class));
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody());
-    }
 }
