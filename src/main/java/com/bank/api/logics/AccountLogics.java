@@ -149,6 +149,13 @@ public class AccountLogics {
     }
 
     public ResponseEntity<Object> depositMoney(DepositRequest depositRequest, Principal principal) {
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(depositRequest.getAccountNumber());
+        if(personalDetails==null){
+            return new ResponseEntity<>("No account found",HttpStatus.BAD_REQUEST);
+        }
+        if(!personalDetails.getFirstName().equals(depositRequest.getFirstName()) || !personalDetails.getLastName().equals(depositRequest.getLastName()) ){
+            return new ResponseEntity<>("Invalid name",HttpStatus.BAD_REQUEST);
+        }
         Account account = accountService.getAccount(depositRequest.getAccountNumber());
         long amount = account.getBalance()+depositRequest.getAmount();
         account.setBalance(amount);
@@ -174,6 +181,14 @@ public class AccountLogics {
     }
 
     public ResponseEntity<Object> withdrawMoney(DepositRequest depositRequest, Principal principal) {
+        PersonalDetails personalDetails = personalDetailsService.getDetailsByAccountNumber(depositRequest.getAccountNumber());
+        if(personalDetails==null){
+            return new ResponseEntity<>("No account found",HttpStatus.BAD_REQUEST);
+        }
+        if(!personalDetails.getFirstName().equals(depositRequest.getFirstName()) || !personalDetails.getLastName().equals(depositRequest.getLastName()) ){
+            return new ResponseEntity<>("Invalid name",HttpStatus.BAD_REQUEST);
+        }
+
         Account account = accountService.getAccount(depositRequest.getAccountNumber());
         long amount = account.getBalance()-depositRequest.getAmount();
         if(amount<0){
